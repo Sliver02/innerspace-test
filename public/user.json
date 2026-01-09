@@ -1,9 +1,10 @@
 {
-    "name": "Test User",
-    "email": "test@example.com",
-    "city": "london",
-    "birth_date": "1990-01-01",
-    "profile_image": "/user/profile-image.jpg",
-    "bio": "This is a test user profile.",
-    "mood": "happy"
+  "id": 1,
+  "name": "Test User",
+  "email": "test@example.com",
+  "city": "london",
+  "birth_date": "1990-01-01",
+  "profile_image": "/user/profile-image.jpg",
+  "bio": "This is a test user profile.",
+  "mood": "happy"
 }
