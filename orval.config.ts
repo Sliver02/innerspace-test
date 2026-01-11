@@ -9,11 +9,14 @@ export default defineConfig({
       mode: "single",
       target: "./src/gen/output.ts",
       client: "react-query",
-      httpClient: "fetch",
       override: {
         query: {
           useQuery: true,
           signal: true,
+        },
+        mutator: {
+          path: "./src/gen/mutator.ts",
+          name: "customInstance",
         },
       },
     },
