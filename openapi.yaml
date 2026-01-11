@@ -1,0 +1,99 @@
+openapi: 3.0.0
+info:
+  title: Innerspace Test API
+  version: 1.0.0
+  description: API for user and weather data
+
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+
+paths:
+  /api/user:
+    get:
+      operationId: getUser
+      summary: Get user profile
+      tags:
+        - User
+      responses:
+        "200":
+          description: User profile data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/data:
+    get:
+      operationId: getData
+      summary: Get weather data
+      tags:
+        - Data
+      responses:
+        "200":
+          description: Weather data in CSV format
+          content:
+            text/csv:
+              schema:
+                type: string
+                example: "date,city,temperature_c,humidity,precip_mm,wind_kph\n2023-01-01,London,7.2,82,0.0,12.4"
+        "404":
+          description: Data not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - city
+        - birth_date
+        - profile_image
+        - bio
+        - mood
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Test User"
+        email:
+          type: string
+          format: email
+          example: "test@example.com"
+        city:
+          type: string
+          example: "london"
+        birth_date:
+          type: string
+          format: date
+          example: "1990-01-01"
+        profile_image:
+          type: string
+          example: "/user/profile-image.jpg"
+        bio:
+          type: string
+          example: "This is a test user profile."
+        mood:
+          type: string
+          example: "happy"
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          additionalProperties: true

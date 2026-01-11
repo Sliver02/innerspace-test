@@ -1,65 +1,129 @@
-import Image from "next/image";
+"use client";
+
+import { useContext } from "react";
+import { DataContext } from "@/providers/DataProvider";
 import styles from "./page.module.css";
 
 export default function Home() {
+  const context = useContext(DataContext);
+
+  if (!context) {
+    return <div>Error: DataContext not available</div>;
+  }
+
+  const {
+    userData,
+    userLoading,
+    userError,
+    csvData,
+    csvLoading,
+    csvError,
+    refetchUser,
+    refetchData,
+  } = context;
+
   return (
     <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      <main className={styles.main} style={{ color: "#000" }}>
+        <h1 style={{ color: "#000" }}>API Endpoints Test</h1>
+
+        {/* User Endpoint Test */}
+        <section style={{ marginBottom: "3rem", width: "100%", color: "#000" }}>
+          <h2 style={{ color: "#000" }}>🧑 User Endpoint (/api/user)</h2>
+          <button
+            onClick={() => refetchUser()}
+            style={{
+              marginBottom: "1rem",
+              padding: "0.5rem 1rem",
+              cursor: "pointer",
+              background: "#0070f3",
+              color: "#fff",
+              border: "none",
+              borderRadius: "4px",
+            }}
           >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            Refetch User
+          </button>
+
+          {userLoading && (
+            <p style={{ color: "#000" }}>⏳ Loading user data...</p>
+          )}
+
+          {userError && (
+            <div style={{ color: "red" }}>
+              <p>❌ Error: {userError.message}</p>
+            </div>
+          )}
+
+          {userData && !userLoading && (
+            <div
+              style={{
+                background: "#f5f5f5",
+                padding: "1rem",
+                borderRadius: "8px",
+                textAlign: "left",
+                color: "#000",
+              }}
+            >
+              <h3 style={{ color: "#000" }}>✅ User Data:</h3>
+              <pre style={{ color: "#000" }}>
+                {JSON.stringify(userData, null, 2)}
+              </pre>
+            </div>
+          )}
+        </section>
+
+        {/* Data Endpoint Test */}
+        <section style={{ width: "100%", color: "#000" }}>
+          <h2 style={{ color: "#000" }}>📊 Data Endpoint (/api/data)</h2>
+          <button
+            onClick={() => refetchData()}
+            style={{
+              marginBottom: "1rem",
+              padding: "0.5rem 1rem",
+              cursor: "pointer",
+              background: "#0070f3",
+              color: "#fff",
+              border: "none",
+              borderRadius: "4px",
+            }}
           >
-            Documentation
-          </a>
-        </div>
+            Refetch Data
+          </button>
+
+          {csvLoading && (
+            <p style={{ color: "#000" }}>⏳ Loading CSV data...</p>
+          )}
+
+          {csvError && (
+            <div style={{ color: "red" }}>
+              <p>❌ Error: {csvError.message}</p>
+            </div>
+          )}
+
+          {csvData && !csvLoading && (
+            <div
+              style={{
+                background: "#f5f5f5",
+                padding: "1rem",
+                borderRadius: "8px",
+                textAlign: "left",
+                color: "#000",
+              }}
+            >
+              <h3 style={{ color: "#000" }}>✅ CSV Data:</h3>
+              <pre
+                style={{
+                  whiteSpace: "pre-wrap",
+                  fontSize: "0.85rem",
+                  color: "#000",
+                }}
+              >
+                {csvData}
+              </pre>
+            </div>
+          )}
+        </section>
       </main>
     </div>
   );

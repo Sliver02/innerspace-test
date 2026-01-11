@@ -1,54 +1,53 @@
-import { DataInterface } from "@/interfaces/dataInterface";
-import { UserInterface } from "@/interfaces/userInterface";
-import { apiRoutes } from "@/app/api/apiRoutes";
-import { createContext, ReactNode, useState } from "react";
+"use client";
+
+import { User, useGetUser, useGetData } from "@/api/generated";
+import { createContext, ReactNode } from "react";
 
 interface DataContextInterface {
-  data: DataInterface | null;
-  user: UserInterface | null;
-  fetchUserData: () => Promise<void>;
-  fetchData: () => Promise<void>;
+  userData: User | undefined;
+  userLoading: boolean;
+  userError: Error | null;
+  csvData: string | undefined;
+  csvLoading: boolean;
+  csvError: Error | null;
+  refetchUser: () => void;
+  refetchData: () => void;
 }
 
-const DataContext = createContext<DataContextInterface | undefined>({
-  data: null,
-  user: null,
-  fetchUserData: async () => {},
-  fetchData: async () => {},
-});
+const DataContext = createContext<DataContextInterface | undefined>(undefined);
 
 const DataProvider = ({ children }: { children: ReactNode | ReactNode[] }) => {
-  const [data, setData] = useState(null);
-  const [user, setUser] = useState(null);
+  // Use auto-generated React Query hooks from Orval
+  const {
+    data: userResponse,
+    isLoading: userLoading,
+    error: userError,
+    refetch: refetchUser,
+  } = useGetUser();
+  const {
+    data: csvResponse,
+    isLoading: csvLoading,
+    error: csvError,
+    refetch: refetchData,
+  } = useGetData();
 
-  const fetchUserData = async () => {
-    try {
-      const response = await fetch(apiRoutes.user);
-      if (!response.ok) {
-        throw new Error("Failed to fetch user data");
-      }
-      const userData = await response.json();
-      setUser(userData);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
-
-  const fetchData = async () => {
-    try {
-      const response = await fetch(apiRoutes.data);
-      if (!response.ok) {
-        throw new Error("Failed to fetch data");
-      }
-      const csvData = await response.json();
-      setData(csvData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  // Extract data from responses - only use successful responses
+  const userData = userResponse?.status === 200 ? userResponse.data : undefined;
+  const csvData = csvResponse?.status === 200 ? csvResponse.data : undefined;
 
   return (
-    <DataContext.Provider value={{ data, user, fetchUserData, fetchData }}>
+    <DataContext.Provider
+      value={{
+        userData,
+        userLoading,
+        userError: userError as Error | null,
+        csvData,
+        csvLoading,
+        csvError: csvError as Error | null,
+        refetchUser,
+        refetchData,
+      }}
+    >
       {children}
     </DataContext.Provider>
   );
