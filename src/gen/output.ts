@@ -20,7 +20,6 @@ import type {
   UseQueryResult
 } from '@tanstack/react-query';
 
-import { customInstance } from './mutator';
 export interface User {
   id: number;
   name: string;
@@ -37,10 +36,6 @@ export type ErrorError = { [key: string]: unknown };
 export interface Error {
   error?: ErrorError;
 }
-
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
 
 /**
  * @summary Get user profile
@@ -74,14 +69,20 @@ export const getGetUserUrl = () => {
 
 export const getUser = async ( options?: RequestInit): Promise<getUserResponse> => {
   
-  return customInstance<getUserResponse>(getGetUserUrl(),
+  const res = await fetch(getGetUserUrl(),
   {      
     ...options,
     method: 'GET'
     
     
   }
-);}
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: getUserResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as getUserResponse
+}
 
 
 
@@ -94,16 +95,16 @@ export const getGetUserQueryKey = () => {
     }
 
     
-export const getGetUserQueryOptions = <TData = Awaited<ReturnType<typeof getUser>>, TError = Error>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetUserQueryOptions = <TData = Awaited<ReturnType<typeof getUser>>, TError = Error>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData>>, fetch?: RequestInit}
 ) => {
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetUserQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUser>>> = ({ signal }) => getUser({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUser>>> = ({ signal }) => getUser({ signal, ...fetchOptions });
 
       
 
@@ -123,7 +124,7 @@ export function useGetUser<TData = Awaited<ReturnType<typeof getUser>>, TError =
           TError,
           Awaited<ReturnType<typeof getUser>>
         > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
+      >, fetch?: RequestInit}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetUser<TData = Awaited<ReturnType<typeof getUser>>, TError = Error>(
@@ -133,11 +134,11 @@ export function useGetUser<TData = Awaited<ReturnType<typeof getUser>>, TError =
           TError,
           Awaited<ReturnType<typeof getUser>>
         > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
+      >, fetch?: RequestInit}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetUser<TData = Awaited<ReturnType<typeof getUser>>, TError = Error>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData>>, fetch?: RequestInit}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
@@ -145,7 +146,7 @@ export function useGetUser<TData = Awaited<ReturnType<typeof getUser>>, TError =
  */
 
 export function useGetUser<TData = Awaited<ReturnType<typeof getUser>>, TError = Error>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData>>, fetch?: RequestInit}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -194,14 +195,20 @@ export const getGetDataUrl = () => {
 
 export const getData = async ( options?: RequestInit): Promise<getDataResponse> => {
   
-  return customInstance<getDataResponse>(getGetDataUrl(),
+  const res = await fetch(getGetDataUrl(),
   {      
     ...options,
     method: 'GET'
     
     
   }
-);}
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: getDataResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as getDataResponse
+}
 
 
 
@@ -214,16 +221,16 @@ export const getGetDataQueryKey = () => {
     }
 
     
-export const getGetDataQueryOptions = <TData = Awaited<ReturnType<typeof getData>>, TError = Error>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getData>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetDataQueryOptions = <TData = Awaited<ReturnType<typeof getData>>, TError = Error>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getData>>, TError, TData>>, fetch?: RequestInit}
 ) => {
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetDataQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getData>>> = ({ signal }) => getData({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getData>>> = ({ signal }) => getData({ signal, ...fetchOptions });
 
       
 
@@ -243,7 +250,7 @@ export function useGetData<TData = Awaited<ReturnType<typeof getData>>, TError =
           TError,
           Awaited<ReturnType<typeof getData>>
         > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
+      >, fetch?: RequestInit}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetData<TData = Awaited<ReturnType<typeof getData>>, TError = Error>(
@@ -253,11 +260,11 @@ export function useGetData<TData = Awaited<ReturnType<typeof getData>>, TError =
           TError,
           Awaited<ReturnType<typeof getData>>
         > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
+      >, fetch?: RequestInit}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetData<TData = Awaited<ReturnType<typeof getData>>, TError = Error>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getData>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getData>>, TError, TData>>, fetch?: RequestInit}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
@@ -265,7 +272,7 @@ export function useGetData<TData = Awaited<ReturnType<typeof getData>>, TError =
  */
 
 export function useGetData<TData = Awaited<ReturnType<typeof getData>>, TError = Error>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getData>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getData>>, TError, TData>>, fetch?: RequestInit}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
