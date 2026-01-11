@@ -15,10 +15,6 @@ export default defineConfig({
           useQuery: true,
           signal: true,
         },
-        mutator: {
-          path: "./src/gen/mutator.ts",
-          name: "customInstance",
-        },
       },
     },
   },
