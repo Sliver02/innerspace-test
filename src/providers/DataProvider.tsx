@@ -1,6 +1,6 @@
 "use client";
 
-import { User, useGetUser, useGetData } from "@/api/generated";
+import { User, useGetUser, useGetData } from "@/gen/output";
 import { createContext, ReactNode } from "react";
 
 interface DataContextInterface {
