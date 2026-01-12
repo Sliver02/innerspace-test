@@ -2,7 +2,7 @@
 
 import { useContext } from "react";
 import { DataContext } from "@/providers/DataProvider";
-import styles from "./page.module.css";
+import styles from "./page.module.scss";
 
 export default function Home() {
   const context = useContext(DataContext);
