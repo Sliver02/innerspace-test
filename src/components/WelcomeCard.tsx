@@ -1,7 +1,8 @@
-import { Paper, Typography, Box, IconButton } from "@mui/material";
+import { Paper, Typography, Box, IconButton, alpha } from "@mui/material";
 import WavingHandIcon from "@mui/icons-material/WavingHand";
 import PersonIcon from "@mui/icons-material/Person";
 import Link from "next/link";
+import styles from "./WelcomeCard.module.scss";
 
 interface WelcomeCardProps {
   userName: string;
@@ -10,45 +11,36 @@ interface WelcomeCardProps {
 export default function WelcomeCard({ userName }: WelcomeCardProps) {
   return (
     <Paper
-      elevation={2}
-      sx={{
-        p: 4,
-        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-        color: "white",
-        borderRadius: 2,
-      }}
+      elevation={0}
+      className={styles.welcomeCard}
+      sx={(theme) => ({
+        background: `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.dark} 100%)`,
+        color: theme.palette.primary.contrastText,
+      })}
     >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <WavingHandIcon sx={{ fontSize: 40 }} />
+      <Box className={styles.content}>
+        <Box className={styles.leftSection}>
+          <WavingHandIcon className={styles.icon} />
           <Box>
-            <Typography variant="h4" component="h1" fontWeight="bold">
+            <Typography variant="h4" component="h1" className={styles.title}>
               Welcome, {userName}!
             </Typography>
-            <Typography variant="body1" sx={{ mt: 1, opacity: 0.9 }}>
-              Here`s your weather dashboard overview
+            <Typography variant="body1" className={styles.subtitle}>
+              Here&apos;s your weather dashboard overview
             </Typography>
           </Box>
         </Box>
         <Link href="/userProfile" passHref legacyBehavior>
           <IconButton
             component="a"
-            sx={{
-              bgcolor: "rgba(255, 255, 255, 0.2)",
-              color: "white",
-              "&:hover": {
-                bgcolor: "rgba(255, 255, 255, 0.3)",
-              },
-            }}
+            className={styles.profileButton}
+            sx={(theme) => ({
+              bgcolor: alpha(theme.palette.primary.contrastText, 0.2),
+              color: theme.palette.primary.contrastText,
+            })}
             aria-label="View Profile"
           >
-            <PersonIcon sx={{ fontSize: 28 }} />
+            <PersonIcon />
           </IconButton>
         </Link>
       </Box>

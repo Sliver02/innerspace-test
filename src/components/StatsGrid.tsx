@@ -22,7 +22,7 @@ export default function StatsGrid({
           title="Total Data Entries"
           value={totalRows.toLocaleString()}
           icon={<TableRowsIcon sx={{ fontSize: 28 }} />}
-          color="#1976d2"
+          colorVariant="primary"
         />
       </Grid>
       <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -30,7 +30,7 @@ export default function StatsGrid({
           title="Date Range"
           value={dateRange}
           icon={<CalendarMonthIcon sx={{ fontSize: 28 }} />}
-          color="#2e7d32"
+          colorVariant="success"
         />
       </Grid>
       <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -38,7 +38,7 @@ export default function StatsGrid({
           title="Cities Available"
           value={totalCities}
           icon={<LocationCityIcon sx={{ fontSize: 28 }} />}
-          color="#ed6c02"
+          colorVariant="warning"
         />
       </Grid>
     </Grid>

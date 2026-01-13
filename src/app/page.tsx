@@ -94,14 +94,14 @@ export default function Home() {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="lg" sx={{ py: 5 }}>
       {/* Welcome Section */}
-      <Box sx={{ mb: 4 }}>
+      <Box sx={{ mb: 5 }}>
         <WelcomeCard userName={userData?.name || "Guest"} />
       </Box>
 
       {/* Summary Statistics */}
-      <Box sx={{ mb: 4 }}>
+      <Box sx={{ mb: 5 }}>
         <StatsGrid
           totalRows={weatherData.length}
           dateRange={dateRange}
@@ -110,7 +110,7 @@ export default function Home() {
       </Box>
 
       {activeCity && cityStats && (
-        <Box sx={{ mb: 4 }}>
+        <Box sx={{ mb: 5 }}>
           <CityStatsCard
             cities={cities}
             selectedCity={activeCity}

@@ -1,7 +1,18 @@
-import { Paper, Typography, Box, Grid, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import {
+  Paper,
+  Typography,
+  Box,
+  Grid,
+  FormControl,
+  Select,
+  MenuItem,
+  InputLabel,
+  alpha,
+} from "@mui/material";
 import ThermostatIcon from "@mui/icons-material/Thermostat";
 import AirIcon from "@mui/icons-material/Air";
 import WaterDropIcon from "@mui/icons-material/WaterDrop";
+import styles from "./CityStatsCard.module.scss";
 
 interface CityStatsCardProps {
   cities: string[];
@@ -21,9 +32,13 @@ export default function CityStatsCard({
   totalPrecipitation,
 }: CityStatsCardProps) {
   return (
-    <Paper elevation={2} sx={{ p: 3, borderRadius: 2 }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
-        <Typography variant="h5" component="h2" fontWeight="bold">
+    <Paper
+      elevation={0}
+      className={styles.cityStatsCard}
+      sx={{ border: 1, borderColor: "divider" }}
+    >
+      <Box className={styles.header}>
+        <Typography variant="h5" component="h2" className={styles.title}>
           City Statistics
         </Typography>
         <FormControl sx={{ minWidth: 200 }} size="small">
@@ -43,58 +58,54 @@ export default function CityStatsCard({
           </Select>
         </FormControl>
       </Box>
-      <Grid container spacing={3} sx={{ mt: 1 }}>
+      <Grid container spacing={2} className={styles.statsGrid}>
         <Grid size={{ xs: 12, sm: 4 }}>
           <Box
-            sx={{
-              p: 2,
-              borderRadius: 2,
-              bgcolor: "rgba(255, 152, 0, 0.1)",
-              textAlign: "center",
-            }}
+            className={styles.statBox}
+            sx={{ bgcolor: (theme) => alpha(theme.palette.warning.main, 0.1) }}
           >
             <ThermostatIcon
               sx={{ fontSize: 40, color: "warning.main", mb: 1 }}
             />
-            <Typography variant="h5" fontWeight="bold">
+            <Typography variant="h5" className={styles.statValue}>
               {avgTemperature.toFixed(1)}°C
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              className={styles.statLabel}
+            >
               Avg Temperature
             </Typography>
           </Box>
         </Grid>
         <Grid size={{ xs: 12, sm: 4 }}>
           <Box
-            sx={{
-              p: 2,
-              borderRadius: 2,
-              bgcolor: "rgba(33, 150, 243, 0.1)",
-              textAlign: "center",
-            }}
+            className={styles.statBox}
+            sx={{ bgcolor: (theme) => alpha(theme.palette.info.main, 0.1) }}
           >
             <AirIcon sx={{ fontSize: 40, color: "info.main", mb: 1 }} />
-            <Typography variant="h5" fontWeight="bold">
+            <Typography variant="h5" className={styles.statValue}>
               {maxWindSpeed.toFixed(1)} km/h
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              className={styles.statLabel}
+            >
               Max Wind Speed
             </Typography>
           </Box>
         </Grid>
         <Grid size={{ xs: 12, sm: 4 }}>
           <Box
-            sx={{
-              p: 2,
-              borderRadius: 2,
-              bgcolor: "rgba(25, 118, 210, 0.1)",
-              textAlign: "center",
-            }}
+            className={styles.statBox}
+            sx={{ bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1) }}
           >
             <WaterDropIcon
               sx={{ fontSize: 40, color: "primary.main", mb: 1 }}
             />
-            <Typography variant="h5" fontWeight="bold">
+            <Typography variant="h5" className={styles.statValue}>
               {totalPrecipitation.toFixed(1)} mm
             </Typography>
             <Typography variant="body2" color="text.secondary">

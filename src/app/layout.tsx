@@ -5,6 +5,7 @@ import { DataProvider } from "@/providers/DataProvider";
 import { QueryProvider } from "@/providers/QueryProvider";
 import Header from "@/components/Header";
 import { Box } from "@mui/material";
+import AppTheme from "@/theme/AppTheme";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,16 +28,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <QueryProvider>
-          <DataProvider>
-            <Header />
-            <Box component="main" sx={{ pt: 8 }}>
-              {children}
-            </Box>
-          </DataProvider>
-        </QueryProvider>
+        <AppTheme>
+          <QueryProvider>
+            <DataProvider>
+              <Header />
+              <Box component="main" sx={{ pt: 8 }}>
+                {children}
+              </Box>
+            </DataProvider>
+          </QueryProvider>
+        </AppTheme>
       </body>
     </html>
   );

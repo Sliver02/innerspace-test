@@ -1,6 +1,7 @@
 import { Paper, Typography, Box } from "@mui/material";
 import { LineChart } from "@mui/x-charts/LineChart";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
+import styles from "./TemperatureChart.module.scss";
 
 interface TemperatureChartProps {
   dates: string[];
@@ -12,10 +13,14 @@ export default function TemperatureChart({
   temperatures,
 }: TemperatureChartProps) {
   return (
-    <Paper elevation={2} sx={{ p: 3, borderRadius: 2 }}>
-      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+    <Paper
+      elevation={0}
+      className={styles.chartCard}
+      sx={{ border: 1, borderColor: "divider" }}
+    >
+      <Box sx={{ display: "flex", alignItems: "center" }}>
         <ShowChartIcon sx={{ mr: 1, color: "primary.main" }} />
-        <Typography variant="h5" component="h2" fontWeight="bold">
+        <Typography variant="h5" component="h2" className={styles.title}>
           Temperature Trend
         </Typography>
       </Box>
@@ -32,7 +37,6 @@ export default function TemperatureChart({
             {
               data: temperatures,
               label: "Temperature (°C)",
-              color: "#1976d2",
               curve: "natural",
             },
           ]}

@@ -1,47 +1,48 @@
-import { Paper, Typography, Box } from "@mui/material";
+import { Paper, Typography, Box, alpha } from "@mui/material";
 import { ReactNode } from "react";
+import styles from "./SummaryCard.module.scss";
 
 interface SummaryCardProps {
   title: string;
   value: string | number;
   icon: ReactNode;
-  color?: string;
+  colorVariant?: "primary" | "success" | "warning" | "error" | "info";
 }
 
 export default function SummaryCard({
   title,
   value,
   icon,
-  color = "#1976d2",
+  colorVariant = "primary",
 }: SummaryCardProps) {
   return (
     <Paper
-      elevation={1}
-      sx={{
-        p: 3,
-        height: "100%",
-        borderRadius: 2,
-      }}
+      elevation={0}
+      className={styles.summaryCard}
+      sx={{ border: 1, borderColor: "divider" }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-        <Box
-          sx={{
-            p: 1.5,
-            borderRadius: 2,
-            bgcolor: `${color}15`,
-            color: color,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          {icon}
-        </Box>
+      <Box
+        className={styles.icon}
+        sx={(theme) => ({
+          bgcolor: alpha(theme.palette[colorVariant].main, 0.1),
+          color: theme.palette[colorVariant].main,
+        })}
+      >
+        {icon}
       </Box>
-      <Typography variant="h4" component="div" fontWeight="bold" gutterBottom>
+      <Typography
+        variant="h4"
+        component="div"
+        className={styles.value}
+        gutterBottom
+      >
         {value}
       </Typography>
-      <Typography variant="body2" color="text.secondary">
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        className={styles.label}
+      >
         {title}
       </Typography>
     </Paper>
