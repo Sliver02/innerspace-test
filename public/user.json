@@ -1,10 +1,13 @@
 {
   "id": 1,
-  "name": "Test User",
-  "email": "test@example.com",
-  "city": "london",
+  "name": "John",
+  "surname": "Doe",
+  "email": "john.doe@example.com",
+  "phone": "+1 (555) 123-4567",
+  "hometown": "London",
+  "job": "Software Engineer",
   "birth_date": "1990-01-01",
   "profile_image": "/user/profile-image.jpg",
-  "bio": "This is a test user profile.",
+  "bio": "Passionate about technology and innovation.",
   "mood": "happy"
 }

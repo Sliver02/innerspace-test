@@ -1,66 +1,83 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import { useContext } from "react";
+import { DataContext } from "@/providers/DataProvider";
+import {
+  Container,
+  Grid,
+  Box,
+  Alert,
+  CircularProgress,
+  Paper,
+  Typography,
+} from "@mui/material";
+import ProfileImage from "@/components/ProfileImage";
+import UserInfoGrid from "@/components/UserInfoGrid";
 
 export default function UserProfile() {
+  const context = useContext(DataContext);
+
+  const { userData, userLoading, userError } = context || {};
+
+  if (!context) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Alert severity="error">Error: DataContext not available</Alert>
+      </Container>
+    );
+  }
+
+  if (userLoading) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
+          <CircularProgress />
+        </Box>
+      </Container>
+    );
+  }
+
+  if (userError) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Alert severity="error">
+          {userError?.message || "Error loading user data"}
+        </Alert>
+      </Container>
+    );
+  }
+
+  if (!userData) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Alert severity="warning">No user data available</Alert>
+      </Container>
+    );
+  }
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Grid container spacing={3}>
+        {/* Left Column - Profile Image and Name */}
+        <Grid size={{ xs: 12, md: 3 }}>
+          <Box sx={{ position: "sticky", top: 20 }}>
+            <ProfileImage user={userData} imageUrl="" />
+            <Paper elevation={2} sx={{ p: 2, borderRadius: 2, mb: 3 }}>
+              <Typography variant="h5" component="h1" fontWeight="bold">
+                {userData.name} {userData.surname}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                {userData.job}
+              </Typography>
+            </Paper>
+          </Box>
+        </Grid>
+
+        {/* Right Column - User Information */}
+        <Grid size={{ xs: 12, md: 9 }}>
+          <UserInfoGrid userData={userData} />
+        </Grid>
+      </Grid>
+    </Container>
   );
 }

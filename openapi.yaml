@@ -57,8 +57,11 @@ components:
       required:
         - id
         - name
+        - surname
         - email
-        - city
+        - phone
+        - hometown
+        - job
         - birth_date
         - profile_image
         - bio
@@ -69,14 +72,23 @@ components:
           example: 1
         name:
           type: string
-          example: "Test User"
+          example: "John"
+        surname:
+          type: string
+          example: "Doe"
         email:
           type: string
           format: email
-          example: "test@example.com"
-        city:
+          example: "john.doe@example.com"
+        phone:
           type: string
-          example: "london"
+          example: "+1 (555) 123-4567"
+        hometown:
+          type: string
+          example: "London"
+        job:
+          type: string
+          example: "Software Engineer"
         birth_date:
           type: string
           format: date
@@ -86,10 +98,44 @@ components:
           example: "/user/profile-image.jpg"
         bio:
           type: string
-          example: "This is a test user profile."
+          example: "Passionate about technology and innovation."
         mood:
           type: string
           example: "happy"
+
+    WeatherData:
+      type: object
+      required:
+        - date
+        - city
+        - temperature_c
+        - humidity
+        - precip_mm
+        - wind_kph
+      properties:
+        date:
+          type: string
+          format: date-time
+          example: "2023-01-01T00:00:00Z"
+        city:
+          type: string
+          example: "London"
+        temperature_c:
+          type: number
+          format: float
+          example: 7.2
+        humidity:
+          type: number
+          format: float
+          example: 82.0
+        precip_mm:
+          type: number
+          format: float
+          example: 0.0
+        wind_kph:
+          type: number
+          format: float
+          example: 12.4
 
     Error:
       type: object

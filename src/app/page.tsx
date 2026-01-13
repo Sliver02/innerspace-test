@@ -1,63 +1,62 @@
 "use client";
 
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, useState } from "react";
 import { DataContext } from "@/providers/DataProvider";
+import { Container, Box, Alert, CircularProgress } from "@mui/material";
+import WelcomeCard from "@/components/WelcomeCard";
+import StatsGrid from "@/components/StatsGrid";
+import CitySelector from "@/components/CitySelector";
+import CityStatsCard from "@/components/CityStatsCard";
+import TemperatureChart from "@/components/TemperatureChart";
 import {
-  Container,
-  Grid,
-  Paper,
-  Typography,
-  Button,
-  Box,
-  Alert,
-  CircularProgress,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import PersonIcon from "@mui/icons-material/Person";
-import DatasetIcon from "@mui/icons-material/Dataset";
+  parseCSVData,
+  getDateRange,
+  getUniqueCities,
+  getCityStats,
+  getTemperatureOverTime,
+} from "@/utils/dataProcessing";
 
 export default function Home() {
   const context = useContext(DataContext);
 
-  const {
-    userData,
-    userLoading,
-    userError,
-    csvData,
-    csvLoading,
-    csvError,
-    refetchUser,
-    refetchData,
-  } = context || {};
+  const { userData, userLoading, userError, csvData, csvLoading, csvError } =
+    context || {};
 
-  // Parse CSV data into table format
-  const csvTableData = useMemo(() => {
-    if (!csvData) return { headers: [], rows: [] };
-
-    const lines = csvData.trim().split("\n");
-    if (lines.length === 0) return { headers: [], rows: [] };
-
-    const headers = lines[0].split(",");
-    const rows = lines.slice(1).map((line) => line.split(","));
-
-    return { headers, rows };
+  // Process CSV data
+  const weatherData = useMemo(() => {
+    if (!csvData) return [];
+    return parseCSVData(csvData);
   }, [csvData]);
 
-  // Convert user object to table format
-  const userTableData = useMemo(() => {
-    if (!userData) return [];
+  // Get summary statistics
+  const dateRange = useMemo(() => {
+    const range = getDateRange(weatherData);
+    if (!range) return "No data";
+    return `${range.start.toLocaleDateString()} - ${range.end.toLocaleDateString()}`;
+  }, [weatherData]);
 
-    return Object.entries(userData).map(([key, value]) => ({
-      property: key,
-      value: String(value),
-    }));
-  }, [userData]);
+  const cities = useMemo(() => getUniqueCities(weatherData), [weatherData]);
+
+  // Set default city to user's hometown if available
+  const defaultCity = useMemo(() => {
+    if (userData?.hometown && cities.includes(userData.hometown)) {
+      return userData.hometown;
+    }
+    return cities[0] || "";
+  }, [userData, cities]);
+
+  const [selectedCity, setSelectedCity] = useState(defaultCity);
+
+  // Get city-specific data
+  const cityStats = useMemo(() => {
+    if (!selectedCity) return null;
+    return getCityStats(weatherData, selectedCity);
+  }, [weatherData, selectedCity]);
+
+  const cityTemperatureData = useMemo(
+    () => getTemperatureOverTime(weatherData, selectedCity),
+    [weatherData, selectedCity]
+  );
 
   if (!context) {
     return (
@@ -67,193 +66,78 @@ export default function Home() {
     );
   }
 
+  if (userLoading || csvLoading) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
+          <CircularProgress />
+        </Box>
+      </Container>
+    );
+  }
+
+  if (userError || csvError) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Alert severity="error">
+          {userError?.message || csvError?.message || "Error loading data"}
+        </Alert>
+      </Container>
+    );
+  }
+
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
+      {/* Welcome Section */}
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h3" component="h1" gutterBottom>
-          API Endpoints Test
-        </Typography>
+        <WelcomeCard userName={userData?.name || "Guest"} />
       </Box>
 
-      <Grid container spacing={3}>
-        <Grid size={{ xs: 12 }}>
-          <Paper variant="outlined" sx={{ p: 3, height: "100%" }}>
-            <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-              <DatasetIcon sx={{ mr: 1, fontSize: 28 }} />
-              <Typography variant="h5" component="h2">
-                Data Endpoint
-              </Typography>
-            </Box>
+      {/* Summary Statistics */}
+      <Box sx={{ mb: 4 }}>
+        <StatsGrid
+          totalRows={weatherData.length}
+          dateRange={dateRange}
+          totalCities={cities.length}
+        />
+      </Box>
 
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              /api/data
-            </Typography>
+      {/* City Selection */}
+      <Box sx={{ mb: 4 }}>
+        <CitySelector
+          cities={cities}
+          selectedCity={selectedCity}
+          onCityChange={setSelectedCity}
+        />
+      </Box>
 
-            <Box sx={{ my: 2 }}>
-              <Button
-                variant="contained"
-                color="secondary"
-                startIcon={<RefreshIcon />}
-                onClick={() => refetchData?.()}
-                disabled={csvLoading}
-                fullWidth
-              >
-                Refetch Data
-              </Button>
-            </Box>
+      {/* City Statistics */}
+      {selectedCity && cityStats && (
+        <Box sx={{ mb: 4 }}>
+          <CityStatsCard
+            cityName={selectedCity}
+            avgTemperature={cityStats.avgTemperature}
+            maxWindSpeed={cityStats.maxWindSpeed}
+            totalPrecipitation={cityStats.totalPrecipitation}
+          />
+        </Box>
+      )}
 
-            {csvLoading && (
-              <Box
-                sx={{ display: "flex", alignItems: "center", gap: 1, my: 2 }}
-              >
-                <CircularProgress size={20} />
-                <Typography variant="body2">Loading CSV data...</Typography>
-              </Box>
+      {/* Temperature Chart */}
+      {selectedCity && cityTemperatureData.length > 0 && (
+        <Box sx={{ mb: 4 }}>
+          <TemperatureChart
+            cityName={selectedCity}
+            dates={cityTemperatureData.map((d) =>
+              d.date.toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "short",
+              })
             )}
-
-            {csvError && (
-              <Alert variant="outlined" severity="error" sx={{ my: 2 }}>
-                {csvError.message}
-              </Alert>
-            )}
-
-            {csvData && !csvLoading && (
-              <Box sx={{ mt: 2 }}>
-                <Alert variant="outlined" severity="success" sx={{ mb: 2 }}>
-                  CSV Data Retrieved ({csvTableData.rows.length} entries)
-                </Alert>
-                <TableContainer
-                  component={Paper}
-                  variant="outlined"
-                  sx={{ maxHeight: 400 }}
-                >
-                  <Table stickyHeader size="small">
-                    <TableHead>
-                      <TableRow>
-                        {csvTableData.headers.map((header, index) => (
-                          <TableCell
-                            key={index}
-                            sx={{
-                              fontWeight: "bold",
-                              bgcolor: "grey.100",
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            {header}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {csvTableData.rows.map((row, rowIndex) => (
-                        <TableRow
-                          key={rowIndex}
-                          sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
-                            "&:hover": { bgcolor: "grey.50" },
-                          }}
-                        >
-                          {row.map((cell, cellIndex) => (
-                            <TableCell key={cellIndex}>{cell}</TableCell>
-                          ))}
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Box>
-            )}
-          </Paper>
-        </Grid>
-
-        <Grid size={{ xs: 12 }}>
-          <Paper variant="outlined" sx={{ p: 3, height: "100%" }}>
-            <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-              <PersonIcon sx={{ mr: 1, fontSize: 28 }} />
-              <Typography variant="h5" component="h2">
-                User Endpoint
-              </Typography>
-            </Box>
-
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              /api/user
-            </Typography>
-
-            <Box sx={{ my: 2 }}>
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<RefreshIcon />}
-                onClick={() => refetchUser?.()}
-                disabled={userLoading}
-                fullWidth
-              >
-                Refetch User
-              </Button>
-            </Box>
-
-            {userLoading && (
-              <Box
-                sx={{ display: "flex", alignItems: "center", gap: 1, my: 2 }}
-              >
-                <CircularProgress size={20} />
-                <Typography variant="body2">Loading user data...</Typography>
-              </Box>
-            )}
-
-            {userError && (
-              <Alert variant="outlined" severity="error" sx={{ my: 2 }}>
-                {userError.message}
-              </Alert>
-            )}
-
-            {userData && !userLoading && (
-              <Box sx={{ mt: 2 }}>
-                <Alert variant="outlined" severity="success" sx={{ mb: 2 }}>
-                  User Data Retrieved
-                </Alert>
-                <TableContainer component={Paper} variant="outlined">
-                  <Table size="small">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell
-                          sx={{ fontWeight: "bold", bgcolor: "grey.100" }}
-                        >
-                          Property
-                        </TableCell>
-                        <TableCell
-                          sx={{ fontWeight: "bold", bgcolor: "grey.100" }}
-                        >
-                          Value
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {userTableData.map((row) => (
-                        <TableRow
-                          key={row.property}
-                          sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
-                          }}
-                        >
-                          <TableCell
-                            component="th"
-                            scope="row"
-                            sx={{ fontWeight: 500 }}
-                          >
-                            {row.property}
-                          </TableCell>
-                          <TableCell>{row.value}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Box>
-            )}
-          </Paper>
-        </Grid>
-      </Grid>
+            temperatures={cityTemperatureData.map((d) => d.temperature)}
+          />
+        </Box>
+      )}
     </Container>
   );
 }

@@ -24,12 +24,24 @@ import { customInstance } from './mutator';
 export interface User {
   id: number;
   name: string;
+  surname: string;
   email: string;
-  city: string;
+  phone: string;
+  hometown: string;
+  job: string;
   birth_date: string;
   profile_image: string;
   bio: string;
   mood: string;
+}
+
+export interface WeatherData {
+  date: string;
+  city: string;
+  temperature_c: number;
+  humidity: number;
+  precip_mm: number;
+  wind_kph: number;
 }
 
 export type ErrorError = { [key: string]: unknown };
