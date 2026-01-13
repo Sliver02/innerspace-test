@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import SummaryCard from "./SummaryCard";
+import SummaryCard from "@/components/molecules/SummaryCard";
 import TableRowsIcon from "@mui/icons-material/TableRows";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LocationCityIcon from "@mui/icons-material/LocationCity";

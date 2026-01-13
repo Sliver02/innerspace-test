@@ -3,10 +3,8 @@
 import { useContext, useMemo, useState } from "react";
 import { DataContext } from "@/providers/DataProvider";
 import { Container, Box, Alert, CircularProgress } from "@mui/material";
-import WelcomeCard from "@/components/WelcomeCard";
-import StatsGrid from "@/components/StatsGrid";
-import CityStatsCard from "@/components/CityStatsCard";
-import TemperatureChart from "@/components/TemperatureChart";
+import WelcomeCard from "@/components/molecules/WelcomeCard";
+import CityStatsCard from "@/components/molecules/CityStatsCard";
 import {
   parseCSVData,
   getDateRange,
@@ -14,6 +12,7 @@ import {
   getCityStats,
   getTemperatureOverTime,
 } from "@/utils/dataProcessing";
+import StatsGrid from "@/components/organisms/StatsGrid";
 
 export default function Home() {
   const context = useContext(DataContext);
@@ -94,11 +93,11 @@ export default function Home() {
   }
 
   return (
-    <Container 
-      maxWidth="lg" 
-      sx={{ 
+    <Container
+      maxWidth="lg"
+      sx={{
         py: { xs: 2, md: 3 },
-        px: { xs: 2, md: 3 }
+        px: { xs: 2, md: 3 },
       }}
     >
       {/* Welcome Section */}

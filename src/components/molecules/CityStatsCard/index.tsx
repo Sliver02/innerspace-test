@@ -14,7 +14,7 @@ import { LineChart } from "@mui/x-charts/LineChart";
 import ThermostatIcon from "@mui/icons-material/Thermostat";
 import AirIcon from "@mui/icons-material/Air";
 import WaterDropIcon from "@mui/icons-material/WaterDrop";
-import styles from "./CityStatsCard.module.scss";
+import styles from "./styles.module.scss";
 
 interface CityStatsCardProps {
   cities: string[];
@@ -38,7 +38,7 @@ export default function CityStatsCard({
   chartTemperatures,
 }: CityStatsCardProps) {
   const theme = useTheme();
-  
+
   return (
     <Paper
       elevation={0}
@@ -46,7 +46,12 @@ export default function CityStatsCard({
       sx={{ border: 1, borderColor: "divider" }}
     >
       <Box className={styles.header}>
-        <Typography variant="h6" component="h2" className={styles.title} sx={{ mb: 2 }}>
+        <Typography
+          variant="h6"
+          component="h2"
+          className={styles.title}
+          sx={{ mb: 2 }}
+        >
           City Statistics
         </Typography>
         <FormControl sx={{ minWidth: 200 }} size="small">
@@ -122,7 +127,7 @@ export default function CityStatsCard({
           </Box>
         </Grid>
       </Grid>
-      
+
       {/* Temperature Chart */}
       {chartTemperatures.length > 0 && (
         <Box sx={{ width: "100%", height: 400, mt: 3 }}>
@@ -148,18 +153,32 @@ export default function CityStatsCard({
             margin={{ left: 30, right: 20, top: 20, bottom: 60 }}
             grid={{ vertical: true, horizontal: true }}
             sx={{
-              '& .MuiAreaElement-root': {
+              "& .MuiAreaElement-root": {
                 fill: `url(#temperature-gradient)`,
               },
-              '& .MuiLineElement-root': {
+              "& .MuiLineElement-root": {
                 strokeWidth: 2,
               },
             }}
           >
             <defs>
-              <linearGradient id="temperature-gradient" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stopColor={theme.palette.primary.main} stopOpacity={0.4} />
-                <stop offset="100%" stopColor={theme.palette.primary.main} stopOpacity={0.05} />
+              <linearGradient
+                id="temperature-gradient"
+                x1="0"
+                x2="0"
+                y1="0"
+                y2="1"
+              >
+                <stop
+                  offset="0%"
+                  stopColor={theme.palette.primary.main}
+                  stopOpacity={0.4}
+                />
+                <stop
+                  offset="100%"
+                  stopColor={theme.palette.primary.main}
+                  stopOpacity={0.05}
+                />
               </linearGradient>
             </defs>
           </LineChart>

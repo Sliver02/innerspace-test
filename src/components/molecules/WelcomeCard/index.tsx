@@ -2,7 +2,7 @@ import { Paper, Typography, Box, IconButton, alpha } from "@mui/material";
 import WavingHandIcon from "@mui/icons-material/WavingHand";
 import PersonIcon from "@mui/icons-material/Person";
 import Link from "next/link";
-import styles from "./WelcomeCard.module.scss";
+import styles from "./styles.module.scss";
 
 interface WelcomeCardProps {
   userName: string;

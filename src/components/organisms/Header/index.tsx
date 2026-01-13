@@ -19,8 +19,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import HomeIcon from "@mui/icons-material/Home";
 import { DataContext } from "@/providers/DataProvider";
-import ThemeToggle from "./ThemeToggle";
-import styles from "./Header.module.scss";
+import ThemeToggle from "@/components/atoms/ThemeToggle";
+import styles from "./styles.module.scss";
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

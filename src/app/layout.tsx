@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "@/designSystem/globals.scss";
 import { DataProvider } from "@/providers/DataProvider";
 import { QueryProvider } from "@/providers/QueryProvider";
-import Header from "@/components/Header";
+import Header from "@/components/organisms/Header";
 import { Box } from "@mui/material";
 import AppTheme from "@/theme/AppTheme";
 

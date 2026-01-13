@@ -1,6 +1,6 @@
 import { Paper, Typography, Box, alpha } from "@mui/material";
 import { ReactNode } from "react";
-import styles from "./SummaryCard.module.scss";
+import styles from "./styles.module.scss";
 
 interface SummaryCardProps {
   title: string;

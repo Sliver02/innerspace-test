@@ -11,8 +11,8 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import ProfileImage from "@/components/ProfileImage";
-import UserInfoGrid from "@/components/UserInfoGrid";
+import ProfileImage from "@/components/atoms/ProfileImage";
+import UserInfoGrid from "@/components/organisms/UserInfoGrid";
 
 export default function UserProfile() {
   const context = useContext(DataContext);
@@ -56,11 +56,11 @@ export default function UserProfile() {
   }
 
   return (
-    <Container 
-      maxWidth="lg" 
-      sx={{ 
+    <Container
+      maxWidth="lg"
+      sx={{
         py: { xs: 2, md: 3 },
-        px: { xs: 2, md: 3 }
+        px: { xs: 2, md: 3 },
       }}
     >
       <Grid container spacing={2}>
@@ -68,12 +68,12 @@ export default function UserProfile() {
         <Grid size={{ xs: 12, md: 3 }}>
           <Box sx={{ position: "sticky", top: 20 }}>
             <ProfileImage user={userData} imageUrl="" />
-            <Paper 
-              elevation={0} 
-              sx={{ 
-                p: 2, 
-                border: 1, 
-                borderColor: "divider" 
+            <Paper
+              elevation={0}
+              sx={{
+                p: 2,
+                border: 1,
+                borderColor: "divider",
               }}
             >
               <Typography variant="h6" component="h1" fontWeight="bold">
