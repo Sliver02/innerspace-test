@@ -4,6 +4,7 @@ import "@/designSystem/globals.scss";
 import { DataProvider } from "@/providers/DataProvider";
 import { QueryProvider } from "@/providers/QueryProvider";
 import Header from "@/components/Header";
+import { Box } from "@mui/material";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,9 @@ export default function RootLayout({
         <QueryProvider>
           <DataProvider>
             <Header />
-            {children}
+            <Box component="main" sx={{ pt: 8 }}>
+              {children}
+            </Box>
           </DataProvider>
         </QueryProvider>
       </body>

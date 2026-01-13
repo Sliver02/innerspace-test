@@ -40,12 +40,13 @@ export default function Header() {
 
   return (
     <AppBar
-      position="sticky"
-      elevation={2}
+      position="fixed"
+      elevation={0}
       sx={{
-        top: 0,
         zIndex: 1100,
-        bgcolor: "background.paper",
+        bgcolor: "rgba(255, 255, 255, 0.8)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
         color: "text.primary",
         borderBottom: 1,
         borderColor: "divider",
