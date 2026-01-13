@@ -1,26 +1,48 @@
-import { Paper, Typography, Box, Grid } from "@mui/material";
+import { Paper, Typography, Box, Grid, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import ThermostatIcon from "@mui/icons-material/Thermostat";
 import AirIcon from "@mui/icons-material/Air";
 import WaterDropIcon from "@mui/icons-material/WaterDrop";
 
 interface CityStatsCardProps {
-  cityName: string;
+  cities: string[];
+  selectedCity: string;
+  onCityChange: (city: string) => void;
   avgTemperature: number;
   maxWindSpeed: number;
   totalPrecipitation: number;
 }
 
 export default function CityStatsCard({
-  cityName,
+  cities,
+  selectedCity,
+  onCityChange,
   avgTemperature,
   maxWindSpeed,
   totalPrecipitation,
 }: CityStatsCardProps) {
   return (
     <Paper elevation={2} sx={{ p: 3, borderRadius: 2 }}>
-      <Typography variant="h5" component="h2" gutterBottom fontWeight="bold">
-        {cityName} Statistics
-      </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+        <Typography variant="h5" component="h2" fontWeight="bold">
+          City Statistics
+        </Typography>
+        <FormControl sx={{ minWidth: 200 }} size="small">
+          <InputLabel id="city-select-label">City</InputLabel>
+          <Select
+            labelId="city-select-label"
+            id="city-select"
+            value={selectedCity}
+            label="City"
+            onChange={(e) => onCityChange(e.target.value)}
+          >
+            {cities.map((city) => (
+              <MenuItem key={city} value={city}>
+                {city}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
       <Grid container spacing={3} sx={{ mt: 1 }}>
         <Grid size={{ xs: 12, sm: 4 }}>
           <Box

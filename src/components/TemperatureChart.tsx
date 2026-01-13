@@ -3,13 +3,11 @@ import { LineChart } from "@mui/x-charts/LineChart";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 
 interface TemperatureChartProps {
-  cityName: string;
   dates: string[];
   temperatures: number[];
 }
 
 export default function TemperatureChart({
-  cityName,
   dates,
   temperatures,
 }: TemperatureChartProps) {
@@ -18,7 +16,7 @@ export default function TemperatureChart({
       <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
         <ShowChartIcon sx={{ mr: 1, color: "primary.main" }} />
         <Typography variant="h5" component="h2" fontWeight="bold">
-          Temperature Trend - {cityName}
+          Temperature Trend
         </Typography>
       </Box>
       <Box sx={{ width: "100%", height: 400 }}>

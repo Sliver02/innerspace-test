@@ -5,7 +5,6 @@ import { DataContext } from "@/providers/DataProvider";
 import { Container, Box, Alert, CircularProgress } from "@mui/material";
 import WelcomeCard from "@/components/WelcomeCard";
 import StatsGrid from "@/components/StatsGrid";
-import CitySelector from "@/components/CitySelector";
 import CityStatsCard from "@/components/CityStatsCard";
 import TemperatureChart from "@/components/TemperatureChart";
 import {
@@ -47,15 +46,23 @@ export default function Home() {
 
   const [selectedCity, setSelectedCity] = useState(defaultCity);
 
+  // Derive the actual city to use (either selected or default if selected is invalid)
+  const activeCity = useMemo(() => {
+    if (selectedCity && cities.includes(selectedCity)) {
+      return selectedCity;
+    }
+    return defaultCity;
+  }, [selectedCity, cities, defaultCity]);
+
   // Get city-specific data
   const cityStats = useMemo(() => {
-    if (!selectedCity) return null;
-    return getCityStats(weatherData, selectedCity);
-  }, [weatherData, selectedCity]);
+    if (!activeCity) return null;
+    return getCityStats(weatherData, activeCity);
+  }, [weatherData, activeCity]);
 
   const cityTemperatureData = useMemo(
-    () => getTemperatureOverTime(weatherData, selectedCity),
-    [weatherData, selectedCity]
+    () => getTemperatureOverTime(weatherData, activeCity),
+    [weatherData, activeCity]
   );
 
   if (!context) {
@@ -102,20 +109,12 @@ export default function Home() {
         />
       </Box>
 
-      {/* City Selection */}
-      <Box sx={{ mb: 4 }}>
-        <CitySelector
-          cities={cities}
-          selectedCity={selectedCity}
-          onCityChange={setSelectedCity}
-        />
-      </Box>
-
-      {/* City Statistics */}
-      {selectedCity && cityStats && (
+      {activeCity && cityStats && (
         <Box sx={{ mb: 4 }}>
           <CityStatsCard
-            cityName={selectedCity}
+            cities={cities}
+            selectedCity={activeCity}
+            onCityChange={setSelectedCity}
             avgTemperature={cityStats.avgTemperature}
             maxWindSpeed={cityStats.maxWindSpeed}
             totalPrecipitation={cityStats.totalPrecipitation}
@@ -124,10 +123,9 @@ export default function Home() {
       )}
 
       {/* Temperature Chart */}
-      {selectedCity && cityTemperatureData.length > 0 && (
+      {activeCity && cityTemperatureData.length > 0 && (
         <Box sx={{ mb: 4 }}>
           <TemperatureChart
-            cityName={selectedCity}
             dates={cityTemperatureData.map((d) =>
               d.date.toLocaleDateString("en-GB", {
                 day: "2-digit",
