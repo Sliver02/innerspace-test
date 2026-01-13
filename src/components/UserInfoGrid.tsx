@@ -40,8 +40,15 @@ export default function UserInfoGrid({ userData }: UserInfoGridProps) {
   ];
 
   return (
-    <Paper elevation={2} sx={{ p: 3, borderRadius: 2 }}>
-      <Typography variant="h5" component="h2" fontWeight="bold" gutterBottom>
+    <Paper 
+      elevation={0} 
+      sx={{ 
+        p: 3, 
+        border: 1, 
+        borderColor: "divider" 
+      }}
+    >
+      <Typography variant="h6" component="h2" fontWeight="bold" sx={{ mb: 2 }}>
         Personal Information
       </Typography>
       <Divider sx={{ mb: 3 }} />

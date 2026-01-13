@@ -31,7 +31,7 @@ export default function SummaryCard({
         {icon}
       </Box>
       <Typography
-        variant="h4"
+        variant="h3"
         component="div"
         className={styles.value}
         gutterBottom

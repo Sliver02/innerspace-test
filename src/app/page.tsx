@@ -94,14 +94,20 @@ export default function Home() {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 5 }}>
+    <Container 
+      maxWidth="lg" 
+      sx={{ 
+        py: { xs: 2, md: 3 },
+        px: { xs: 2, md: 3 }
+      }}
+    >
       {/* Welcome Section */}
-      <Box sx={{ mb: 5 }}>
+      <Box sx={{ mb: 2 }}>
         <WelcomeCard userName={userData?.name || "Guest"} />
       </Box>
 
       {/* Summary Statistics */}
-      <Box sx={{ mb: 5 }}>
+      <Box sx={{ mb: 2 }}>
         <StatsGrid
           totalRows={weatherData.length}
           dateRange={dateRange}
@@ -110,7 +116,7 @@ export default function Home() {
       </Box>
 
       {activeCity && cityStats && (
-        <Box sx={{ mb: 5 }}>
+        <Box sx={{ mb: 2 }}>
           <CityStatsCard
             cities={cities}
             selectedCity={activeCity}
@@ -118,21 +124,13 @@ export default function Home() {
             avgTemperature={cityStats.avgTemperature}
             maxWindSpeed={cityStats.maxWindSpeed}
             totalPrecipitation={cityStats.totalPrecipitation}
-          />
-        </Box>
-      )}
-
-      {/* Temperature Chart */}
-      {activeCity && cityTemperatureData.length > 0 && (
-        <Box sx={{ mb: 4 }}>
-          <TemperatureChart
-            dates={cityTemperatureData.map((d) =>
+            chartDates={cityTemperatureData.map((d) =>
               d.date.toLocaleDateString("en-GB", {
                 day: "2-digit",
                 month: "short",
               })
             )}
-            temperatures={cityTemperatureData.map((d) => d.temperature)}
+            chartTemperatures={cityTemperatureData.map((d) => d.temperature)}
           />
         </Box>
       )}

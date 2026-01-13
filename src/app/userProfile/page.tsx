@@ -56,14 +56,27 @@ export default function UserProfile() {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Grid container spacing={3}>
+    <Container 
+      maxWidth="lg" 
+      sx={{ 
+        py: { xs: 2, md: 3 },
+        px: { xs: 2, md: 3 }
+      }}
+    >
+      <Grid container spacing={2}>
         {/* Left Column - Profile Image and Name */}
         <Grid size={{ xs: 12, md: 3 }}>
           <Box sx={{ position: "sticky", top: 20 }}>
             <ProfileImage user={userData} imageUrl="" />
-            <Paper elevation={2} sx={{ p: 2, borderRadius: 2, mb: 3 }}>
-              <Typography variant="h5" component="h1" fontWeight="bold">
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                p: 2, 
+                border: 1, 
+                borderColor: "divider" 
+              }}
+            >
+              <Typography variant="h6" component="h1" fontWeight="bold">
                 {userData.name} {userData.surname}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>

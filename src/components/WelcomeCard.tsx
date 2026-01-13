@@ -22,17 +22,17 @@ export default function WelcomeCard({ userName }: WelcomeCardProps) {
         <Box className={styles.leftSection}>
           <WavingHandIcon className={styles.icon} />
           <Box>
-            <Typography variant="h4" component="h1" className={styles.title}>
+            <Typography variant="h5" component="h1" className={styles.title}>
               Welcome, {userName}!
             </Typography>
-            <Typography variant="body1" className={styles.subtitle}>
+            <Typography variant="body2" className={styles.subtitle}>
               Here&apos;s your weather dashboard overview
             </Typography>
           </Box>
         </Box>
-        <Link href="/userProfile" passHref legacyBehavior>
+        <Link href="/userProfile">
           <IconButton
-            component="a"
+            component="span"
             className={styles.profileButton}
             sx={(theme) => ({
               bgcolor: alpha(theme.palette.primary.contrastText, 0.2),

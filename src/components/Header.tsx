@@ -52,9 +52,9 @@ export default function Header() {
     >
       <Toolbar className={styles.toolbar}>
         {/* Logo/Project Name */}
-        <Link href="/" passHref legacyBehavior>
+        <Link href="/">
           <Box
-            component="a"
+            component="span"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -67,7 +67,7 @@ export default function Header() {
           >
             <Typography
               variant="h6"
-              component="div"
+              component="span"
               sx={(theme) => ({
                 fontWeight: "bold",
                 background: `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.dark} 100%)`,
@@ -156,9 +156,9 @@ export default function Header() {
                   </Box>
                 </Box>
                 <Divider />
-                <Link href="/userProfile" passHref legacyBehavior>
+                <Link href="/userProfile">
                   <MenuItem
-                    component="a"
+                    component="span"
                     onClick={handleMenuClose}
                     sx={{ py: 1.5, fontWeight: 500 }}
                   >

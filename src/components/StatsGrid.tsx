@@ -16,7 +16,7 @@ export default function StatsGrid({
   totalCities,
 }: StatsGridProps) {
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={2}>
       <Grid size={{ xs: 12, sm: 6, md: 4 }}>
         <SummaryCard
           title="Total Data Entries"
@@ -25,7 +25,7 @@ export default function StatsGrid({
           colorVariant="primary"
         />
       </Grid>
-      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+      <Grid size={{ xs: 12, sm: 6, md: 5 }}>
         <SummaryCard
           title="Date Range"
           value={dateRange}
@@ -33,7 +33,7 @@ export default function StatsGrid({
           colorVariant="success"
         />
       </Grid>
-      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+      <Grid size={{ xs: 12, sm: 6, md: 3 }}>
         <SummaryCard
           title="Cities Available"
           value={totalCities}
