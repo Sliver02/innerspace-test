@@ -21,11 +21,6 @@ export default function SummaryCard({
         p: 3,
         height: "100%",
         borderRadius: 2,
-        transition: "transform 0.2s, box-shadow 0.2s",
-        "&:hover": {
-          transform: "translateY(-4px)",
-          boxShadow: 4,
-        },
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
