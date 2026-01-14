@@ -5,7 +5,7 @@ import { DataProvider } from "@/providers/DataProvider";
 import { QueryProvider } from "@/providers/QueryProvider";
 import Header from "@/components/organisms/Header";
 import { Box } from "@mui/material";
-import AppTheme from "@/theme/AppTheme";
+import AppTheme from "@/designSystem/theme/AppTheme";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
