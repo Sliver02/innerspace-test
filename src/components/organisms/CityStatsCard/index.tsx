@@ -19,6 +19,7 @@ import {
 import { LineChart } from "@mui/x-charts/LineChart";
 import { useMemo, useState } from "react";
 import styles from "./styles.module.scss";
+import TemperatureChart from "@/components/molecules/TemperatureChart";
 
 interface CityStatsCardProps {
   weatherData: WeatherData[];
@@ -141,57 +142,10 @@ export default function CityStatsCard({
       {/* Temperature Chart */}
       {chartTemperatures.length > 0 && (
         <Box sx={{ width: "100%", height: 400, mt: 3 }}>
-          <LineChart
-            xAxis={[
-              {
-                data: chartDates.map((_, index) => index),
-                scaleType: "point",
-                valueFormatter: (value) => chartDates[value] || "",
-              },
-            ]}
-            series={[
-              {
-                data: chartTemperatures,
-                label: "Temperature (°C)",
-                curve: "linear",
-                area: true,
-                showMark: false,
-                color: theme.palette.primary.main,
-              },
-            ]}
-            height={400}
-            margin={{ left: 30, right: 20, top: 20, bottom: 60 }}
-            grid={{ vertical: true, horizontal: true }}
-            sx={{
-              "& .MuiAreaElement-root": {
-                fill: `url(#temperature-gradient)`,
-              },
-              "& .MuiLineElement-root": {
-                strokeWidth: 2,
-              },
-            }}
-          >
-            <defs>
-              <linearGradient
-                id="temperature-gradient"
-                x1="0"
-                x2="0"
-                y1="0"
-                y2="1"
-              >
-                <stop
-                  offset="0%"
-                  stopColor={theme.palette.primary.main}
-                  stopOpacity={0.4}
-                />
-                <stop
-                  offset="100%"
-                  stopColor={theme.palette.primary.main}
-                  stopOpacity={0.05}
-                />
-              </linearGradient>
-            </defs>
-          </LineChart>
+          <TemperatureChart
+            dates={chartDates}
+            temperatures={chartTemperatures}
+          />
         </Box>
       )}
     </Paper>

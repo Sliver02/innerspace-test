@@ -15,17 +15,7 @@ export default function TemperatureChart({
   const theme = useTheme();
 
   return (
-    <Paper
-      elevation={0}
-      className={styles.chartCard}
-      sx={{ border: 1, borderColor: "divider" }}
-    >
-      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-        <ShowChartIcon sx={{ mr: 1, color: "primary.main" }} />
-        <Typography variant="h6" component="h2" className={styles.title}>
-          Temperature Trend
-        </Typography>
-      </Box>
+    <>
       <Box sx={{ width: "100%", height: 400 }}>
         <LineChart
           xAxis={[
@@ -79,6 +69,6 @@ export default function TemperatureChart({
           </defs>
         </LineChart>
       </Box>
-    </Paper>
+    </>
   );
 }

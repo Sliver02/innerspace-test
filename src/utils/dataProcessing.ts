@@ -76,17 +76,3 @@ export function getTemperatureOverTime(
   }));
 }
 
-export function getRandomWeather(): {
-  temperature: number;
-  condition: string;
-} {
-  const conditions = ["Sunny", "Cloudy", "Foggy", "Rainy", "Partly Cloudy"];
-  const randomTemp = Math.floor(Math.random() * 25) + 5; // 5-30°C
-  const randomCondition =
-    conditions[Math.floor(Math.random() * conditions.length)];
-
-  return {
-    temperature: randomTemp,
-    condition: randomCondition,
-  };
-}
