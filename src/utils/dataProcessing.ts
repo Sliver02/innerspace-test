@@ -59,14 +59,21 @@ export function getCityStats(data: WeatherData[], city: string) {
   };
 }
 
-export function getTemperatureOverTime(data: WeatherData[], city: string) {
-  return data
-    .filter((d) => d.city.toLowerCase() === city.toLowerCase())
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    .map((d) => ({
-      date: new Date(d.date),
-      temperature: d.temperature_c,
-    }));
+export function getTemperatureOverTime(
+  data: WeatherData[],
+  selectedCity: string
+) {
+  const filterByCity = data.filter(
+    (row) => row.city.toLowerCase() === selectedCity.toLowerCase()
+  );
+  const sortedData = filterByCity.sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
+
+  return sortedData.map((row) => ({
+    date: new Date(row.date),
+    temperature: row.temperature_c,
+  }));
 }
 
 export function getRandomWeather(): {
