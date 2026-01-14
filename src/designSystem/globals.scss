@@ -1,6 +1,14 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: var(--mui-palette-background-default, #ffffff);
+  --foreground: var(--mui-palette-text-primary, #171717);
+  --primary-gradient-start: var(--mui-palette-primary-main, #667eea);
+  --primary-gradient-end: var(--mui-palette-secondary-main, #764ba2);
+  --profile-btn-hover-bg: rgba(
+    255,
+    255,
+    255,
+    0.3
+  ); // fallback, can be replaced with a theme var if needed
 }
 
 html,
