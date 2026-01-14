@@ -102,6 +102,7 @@ export default function CityStatsCard({
           </Select>
         </FormControl>
       </Box>
+
       <Grid container spacing={2} className={styles.statsGrid}>
         <Grid size={{ xs: 4, sm: 4 }}>
           <StatCard
