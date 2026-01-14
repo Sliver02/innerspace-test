@@ -1,18 +1,12 @@
 "use client";
 
-import { useContext, useMemo, useState } from "react";
-import { DataContext } from "@/providers/DataProvider";
-import { Container, Box, Alert, CircularProgress } from "@mui/material";
+import CityStatsCard from "@/components/organisms/CityStatsCard";
 import WelcomeCard from "@/components/molecules/WelcomeCard";
-import CityStatsCard from "@/components/molecules/CityStatsCard";
-import {
-  parseWeatherCsvData,
-  getDateRange,
-  getUniqueCities,
-  getCityStats,
-  getTemperatureOverTime,
-} from "@/utils/dataProcessing";
 import StatsGrid from "@/components/organisms/StatsGrid";
+import { DataContext } from "@/providers/DataProvider";
+import { getUniqueCities } from "@/utils/dataProcessing";
+import { Alert, Box, CircularProgress, Container } from "@mui/material";
+import { useContext, useMemo } from "react";
 
 export default function Home() {
   const context = useContext(DataContext);
@@ -30,35 +24,6 @@ export default function Home() {
     if (!weatherData) return [];
     return getUniqueCities(weatherData);
   }, [weatherData]);
-
-  // Set default city to user's hometown if available
-  const defaultCity = useMemo(() => {
-    if (userData?.hometown && cities.includes(userData.hometown)) {
-      return userData.hometown;
-    }
-    return cities[0] || "";
-  }, [userData, cities]);
-
-  const [selectedCity, setSelectedCity] = useState(defaultCity);
-
-  // Derive the actual city to use (either selected or default if selected is invalid)
-  const activeCity = useMemo(() => {
-    if (selectedCity && cities.includes(selectedCity)) {
-      return selectedCity;
-    }
-    return defaultCity;
-  }, [selectedCity, cities, defaultCity]);
-
-  // Get city-specific data
-  const cityStats = useMemo(() => {
-    if (!activeCity || !weatherData) return null;
-    return getCityStats(weatherData, activeCity);
-  }, [weatherData, activeCity]);
-
-  const cityTemperatureData = useMemo(() => {
-    if (!activeCity || !weatherData) return [];
-    return getTemperatureOverTime(weatherData, activeCity);
-  }, [weatherData, activeCity]);
 
   if (!context) {
     return (
@@ -106,22 +71,12 @@ export default function Home() {
         <StatsGrid weatherData={weatherData} totalCities={cities.length} />
       </Box>
 
-      {activeCity && cityStats && (
+      {weatherData && userData && (
         <Box sx={{ mb: 2 }}>
           <CityStatsCard
+            weatherData={weatherData}
+            userData={userData}
             cities={cities}
-            selectedCity={activeCity}
-            onCityChange={setSelectedCity}
-            avgTemperature={cityStats.avgTemperature}
-            maxWindSpeed={cityStats.maxWindSpeed}
-            totalPrecipitation={cityStats.totalPrecipitation}
-            chartDates={cityTemperatureData.map((d) =>
-              d.date.toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "short",
-              })
-            )}
-            chartTemperatures={cityTemperatureData.map((d) => d.temperature)}
           />
         </Box>
       )}

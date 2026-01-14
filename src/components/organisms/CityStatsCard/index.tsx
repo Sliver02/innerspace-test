@@ -1,43 +1,74 @@
+import StatCard from "@/components/molecules/StatCard";
+import { User, WeatherData } from "@/gen/output";
+import { getCityStats, getTemperatureOverTime } from "@/utils/dataProcessing";
+import AirIcon from "@mui/icons-material/Air";
+import ThermostatIcon from "@mui/icons-material/Thermostat";
+import WaterDropIcon from "@mui/icons-material/WaterDrop";
 import {
-  Paper,
-  Typography,
   Box,
-  Grid,
   FormControl,
-  Select,
-  MenuItem,
+  Grid,
   InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  Typography,
   alpha,
   useTheme,
 } from "@mui/material";
 import { LineChart } from "@mui/x-charts/LineChart";
-import ThermostatIcon from "@mui/icons-material/Thermostat";
-import AirIcon from "@mui/icons-material/Air";
-import WaterDropIcon from "@mui/icons-material/WaterDrop";
+import { useMemo, useState } from "react";
 import styles from "./styles.module.scss";
 
 interface CityStatsCardProps {
+  weatherData: WeatherData[];
+  userData: User;
   cities: string[];
-  selectedCity: string;
-  onCityChange: (city: string) => void;
-  avgTemperature: number;
-  maxWindSpeed: number;
-  totalPrecipitation: number;
-  chartDates: string[];
-  chartTemperatures: number[];
 }
 
 export default function CityStatsCard({
+  weatherData,
+  userData,
   cities,
-  selectedCity,
-  onCityChange,
-  avgTemperature,
-  maxWindSpeed,
-  totalPrecipitation,
-  chartDates,
-  chartTemperatures,
 }: CityStatsCardProps) {
   const theme = useTheme();
+
+  // Set default city to user's hometown if available
+  const defaultCity = useMemo(() => {
+    if (userData?.hometown && cities.includes(userData.hometown)) {
+      return userData.hometown;
+    }
+    return cities[0] || "";
+  }, [userData, cities]);
+
+  const [selectedCity, setSelectedCity] = useState(defaultCity);
+
+  // Derive the actual city to use (either selected or default if selected is invalid)
+  const activeCity = useMemo(() => {
+    if (selectedCity && cities.includes(selectedCity)) {
+      return selectedCity;
+    }
+    return defaultCity;
+  }, [selectedCity, cities, defaultCity]);
+
+  // Get city-specific data
+  const cityStats = useMemo(() => {
+    return getCityStats(weatherData, activeCity);
+  }, [weatherData, activeCity]);
+
+  const cityTemperatureData = useMemo(() => {
+    if (!activeCity || !weatherData) return [];
+    return getTemperatureOverTime(weatherData, activeCity);
+  }, [weatherData, activeCity]);
+
+  const chartDates = cityTemperatureData.map((d) =>
+    d.date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+    })
+  );
+
+  const chartTemperatures = cityTemperatureData.map((d) => d.temperature);
 
   return (
     <Paper
@@ -61,7 +92,7 @@ export default function CityStatsCard({
             id="city-select"
             value={selectedCity}
             label="City"
-            onChange={(e) => onCityChange(e.target.value)}
+            onChange={(e) => setSelectedCity(e.target.value)}
           >
             {cities.map((city) => (
               <MenuItem key={city} value={city}>
@@ -73,58 +104,36 @@ export default function CityStatsCard({
       </Box>
       <Grid container spacing={2} className={styles.statsGrid}>
         <Grid size={{ xs: 4, sm: 4 }}>
-          <Box
-            className={styles.statBox}
-            sx={{ bgcolor: (theme) => alpha(theme.palette.warning.main, 0.1) }}
-          >
-            <ThermostatIcon
-              sx={{ fontSize: 40, color: "warning.main", mb: 1 }}
-            />
-            <Typography variant="h4" className={styles.statValue}>
-              {avgTemperature.toFixed(1)}°C
-            </Typography>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              className={styles.statLabel}
-            >
-              Avg Temperature
-            </Typography>
-          </Box>
+          <StatCard
+            title={`${cityStats?.avgTemperature}°C`}
+            label="Avg Temperature"
+            icon={
+              <ThermostatIcon
+                sx={{ fontSize: 40, color: "warning.main", mb: 1 }}
+              />
+            }
+            bgcolor={alpha(theme.palette.warning.main, 0.1)}
+          />
         </Grid>
         <Grid size={{ xs: 4, sm: 4 }}>
-          <Box
-            className={styles.statBox}
-            sx={{ bgcolor: (theme) => alpha(theme.palette.info.main, 0.1) }}
-          >
-            <AirIcon sx={{ fontSize: 40, color: "info.main", mb: 1 }} />
-            <Typography variant="h4" className={styles.statValue}>
-              {maxWindSpeed.toFixed(1)} km/h
-            </Typography>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              className={styles.statLabel}
-            >
-              Max Wind Speed
-            </Typography>
-          </Box>
+          <StatCard
+            title={`${cityStats?.maxWindSpeed} km/h`}
+            label="Max Wind Speed"
+            icon={<AirIcon sx={{ fontSize: 40, color: "info.main", mb: 1 }} />}
+            bgcolor={alpha(theme.palette.info.main, 0.1)}
+          />
         </Grid>
         <Grid size={{ xs: 4, sm: 4 }}>
-          <Box
-            className={styles.statBox}
-            sx={{ bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1) }}
-          >
-            <WaterDropIcon
-              sx={{ fontSize: 40, color: "primary.main", mb: 1 }}
-            />
-            <Typography variant="h4" className={styles.statValue}>
-              {totalPrecipitation.toFixed(1)} mm
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Total Precipitation
-            </Typography>
-          </Box>
+          <StatCard
+            title={`${cityStats?.totalPrecipitation} mm`}
+            label="Total Precipitation"
+            icon={
+              <WaterDropIcon
+                sx={{ fontSize: 40, color: "primary.main", mb: 1 }}
+              />
+            }
+            bgcolor={alpha(theme.palette.primary.main, 0.1)}
+          />
         </Grid>
       </Grid>
 
