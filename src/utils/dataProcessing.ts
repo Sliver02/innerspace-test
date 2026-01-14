@@ -75,4 +75,3 @@ export function getTemperatureOverTime(
     temperature: row.temperature_c,
   }));
 }
-
