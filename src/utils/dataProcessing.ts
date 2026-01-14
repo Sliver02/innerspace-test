@@ -1,6 +1,6 @@
 import { WeatherData } from "@/gen/output";
 
-export function parseCSVData(csvData: string): WeatherData[] {
+export function parseWeatherCsvData(csvData: string): WeatherData[] {
   const lines = csvData.trim().split("\n");
   if (lines.length <= 1) return [];
 

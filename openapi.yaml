@@ -31,7 +31,7 @@ paths:
 
   /api/data:
     get:
-      operationId: getData
+      operationId: getWeatherData
       summary: Get weather data
       tags:
         - Data

@@ -6,7 +6,7 @@ import { Container, Box, Alert, CircularProgress } from "@mui/material";
 import WelcomeCard from "@/components/molecules/WelcomeCard";
 import CityStatsCard from "@/components/molecules/CityStatsCard";
 import {
-  parseCSVData,
+  parseWeatherCsvData,
   getDateRange,
   getUniqueCities,
   getCityStats,
@@ -17,23 +17,19 @@ import StatsGrid from "@/components/organisms/StatsGrid";
 export default function Home() {
   const context = useContext(DataContext);
 
-  const { userData, userLoading, userError, csvData, csvLoading, csvError } =
-    context || {};
+  const {
+    userData,
+    userLoading,
+    userError,
+    weatherData,
+    weatherDataLoading,
+    weatherError,
+  } = context || {};
 
-  // Process CSV data
-  const weatherData = useMemo(() => {
-    if (!csvData) return [];
-    return parseCSVData(csvData);
-  }, [csvData]);
-
-  // Get summary statistics
-  const dateRange = useMemo(() => {
-    const range = getDateRange(weatherData);
-    if (!range) return "No data";
-    return `${range.start.toLocaleDateString()} - ${range.end.toLocaleDateString()}`;
+  const cities = useMemo(() => {
+    if (!weatherData) return [];
+    return getUniqueCities(weatherData);
   }, [weatherData]);
-
-  const cities = useMemo(() => getUniqueCities(weatherData), [weatherData]);
 
   // Set default city to user's hometown if available
   const defaultCity = useMemo(() => {
@@ -55,14 +51,14 @@ export default function Home() {
 
   // Get city-specific data
   const cityStats = useMemo(() => {
-    if (!activeCity) return null;
+    if (!activeCity || !weatherData) return null;
     return getCityStats(weatherData, activeCity);
   }, [weatherData, activeCity]);
 
-  const cityTemperatureData = useMemo(
-    () => getTemperatureOverTime(weatherData, activeCity),
-    [weatherData, activeCity]
-  );
+  const cityTemperatureData = useMemo(() => {
+    if (!activeCity || !weatherData) return [];
+    return getTemperatureOverTime(weatherData, activeCity);
+  }, [weatherData, activeCity]);
 
   if (!context) {
     return (
@@ -72,7 +68,7 @@ export default function Home() {
     );
   }
 
-  if (userLoading || csvLoading) {
+  if (userLoading || weatherDataLoading) {
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
@@ -82,11 +78,11 @@ export default function Home() {
     );
   }
 
-  if (userError || csvError) {
+  if (userError || weatherError) {
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Alert severity="error">
-          {userError?.message || csvError?.message || "Error loading data"}
+          {userError?.message || weatherError?.message || "Error loading data"}
         </Alert>
       </Container>
     );
@@ -107,11 +103,7 @@ export default function Home() {
 
       {/* Summary Statistics */}
       <Box sx={{ mb: 2 }}>
-        <StatsGrid
-          totalRows={weatherData.length}
-          dateRange={dateRange}
-          totalCities={cities.length}
-        />
+        <StatsGrid weatherData={weatherData} totalCities={cities.length} />
       </Box>
 
       {activeCity && cityStats && (

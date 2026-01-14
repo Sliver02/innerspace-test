@@ -3,18 +3,28 @@ import SummaryCard from "@/components/molecules/SummaryCard";
 import TableRowsIcon from "@mui/icons-material/TableRows";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
+import { getDateRange } from "@/utils/dataProcessing";
+import { useMemo } from "react";
+import { WeatherData } from "@/gen/output";
 
 interface StatsGridProps {
-  totalRows: number;
-  dateRange: string;
+  weatherData: WeatherData[] | undefined;
   totalCities: number;
 }
 
 export default function StatsGrid({
-  totalRows,
-  dateRange,
+  weatherData,
   totalCities,
 }: StatsGridProps) {
+  const dateRange = useMemo(() => {
+    if (!weatherData) return "No data";
+    const range = getDateRange(weatherData);
+    if (!range) return "No data";
+    return `${range.start.toLocaleDateString("en-GB")} - ${range.end.toLocaleDateString("en-GB")}`;
+  }, [weatherData]);
+
+  const totalRows = weatherData?.length || 0;
+
   return (
     <Grid container spacing={2}>
       <Grid size={{ xs: 12, sm: 6, md: 4 }}>

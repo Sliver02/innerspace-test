@@ -1,35 +1,48 @@
 "use client";
 
-import { User, useGetUser, useGetData } from "@/gen/output";
-import { createContext, ReactNode } from "react";
+import { User, useGetUser, WeatherData, useGetWeatherData } from "@/gen/output";
+import { parseWeatherCsvData } from "@/utils/dataProcessing";
+import { createContext, ReactNode, use } from "react";
 
 interface DataContextInterface {
   userData: User | undefined;
   userLoading: boolean;
   userError: Error | null;
-  csvData: string | undefined;
-  csvLoading: boolean;
-  csvError: Error | null;
+  weatherData: WeatherData[] | undefined;
+  weatherDataLoading: boolean;
+
+  weatherError: Error | null;
   refetchUser: () => void;
-  refetchData: () => void;
+  refetchWeatherData: () => void;
 }
 
 const DataContext = createContext<DataContextInterface | undefined>(undefined);
 
 const DataProvider = ({ children }: { children: ReactNode | ReactNode[] }) => {
   // Use auto-generated React Query hooks from Orval
+  // the first fetch is done thru these hooks
+
   const {
     data: userData,
     isLoading: userLoading,
     error: userError,
     refetch: refetchUser,
   } = useGetUser();
+
   const {
-    data: csvData,
-    isLoading: csvLoading,
-    error: csvError,
-    refetch: refetchData,
-  } = useGetData();
+    data: weatherDataCsv,
+    isLoading: weatherDataLoading,
+    error: weatherError,
+    refetch: refetchWeatherData,
+  } = useGetWeatherData({
+    query: {
+      select: (data: string | undefined) => data,
+    },
+  });
+
+  const weatherData = weatherDataCsv
+    ? parseWeatherCsvData(weatherDataCsv)
+    : undefined;
 
   return (
     <DataContext.Provider
@@ -37,11 +50,11 @@ const DataProvider = ({ children }: { children: ReactNode | ReactNode[] }) => {
         userData,
         userLoading,
         userError: userError as Error | null,
-        csvData,
-        csvLoading,
-        csvError: csvError as Error | null,
+        weatherData,
+        weatherDataLoading,
+        weatherError: weatherError as Error | null,
         refetchUser,
-        refetchData,
+        refetchWeatherData,
       }}
     >
       {children}
