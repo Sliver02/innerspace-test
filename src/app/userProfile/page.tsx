@@ -15,17 +15,7 @@ import ProfileImage from "@/components/atoms/ProfileImage";
 import UserInfoGrid from "@/components/organisms/UserInfoGrid";
 
 export default function UserProfile() {
-  const context = useContext(DataContext);
-
-  const { userData, userLoading, userError } = context || {};
-
-  if (!context) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Alert severity="error">Error: DataContext not available</Alert>
-      </Container>
-    );
-  }
+  const { userData, userLoading, userError } = useContext(DataContext);
 
   if (userLoading) {
     return (

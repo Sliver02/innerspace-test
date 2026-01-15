@@ -16,7 +16,16 @@ interface DataContextInterface {
   refetchWeatherData: () => void;
 }
 
-const DataContext = createContext<DataContextInterface | undefined>(undefined);
+const DataContext = createContext<DataContextInterface>({
+  userData: undefined,
+  userLoading: false,
+  userError: null,
+  weatherData: undefined,
+  weatherDataLoading: false,
+  weatherError: null,
+  refetchUser: () => {},
+  refetchWeatherData: () => {},
+});
 
 const DataProvider = ({ children }: { children: ReactNode | ReactNode[] }) => {
   // Use auto-generated React Query hooks from Orval

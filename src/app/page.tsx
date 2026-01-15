@@ -9,8 +9,6 @@ import { Alert, Box, CircularProgress, Container } from "@mui/material";
 import { useContext, useMemo } from "react";
 
 export default function Home() {
-  const context = useContext(DataContext);
-
   const {
     userData,
     userLoading,
@@ -18,20 +16,12 @@ export default function Home() {
     weatherData,
     weatherDataLoading,
     weatherError,
-  } = context || {};
+  } = useContext(DataContext);
 
   const cities = useMemo(() => {
     if (!weatherData) return [];
     return getUniqueCities(weatherData);
   }, [weatherData]);
-
-  if (!context) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Alert severity="error">Error: DataContext not available</Alert>
-      </Container>
-    );
-  }
 
   if (userLoading || weatherDataLoading) {
     return (
