@@ -16,7 +16,6 @@ import {
   alpha,
   useTheme,
 } from "@mui/material";
-import { LineChart } from "@mui/x-charts/LineChart";
 import { useMemo, useState } from "react";
 import styles from "./styles.module.scss";
 import TemperatureChart from "@/components/molecules/TemperatureChart";
